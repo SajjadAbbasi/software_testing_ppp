@@ -1,3 +1,4 @@
+using Ardalis.GuardClauses;
 using sessionSix.App.ObservableBehavior.Domain;
 
 namespace sessionSix.App.ObservableBehavior.Services;
@@ -18,33 +19,14 @@ public class OrderService(
     public Order CreateOrder(CreateOrderRequest request)
     {
         var customer = customerRepository.GetBy(request.CustomerId);
-        if (customer.IsActive == false)
-            throw new Exception("Customer is deActivated");
-
         var store = storeRepository.GetBy(request.StoreId);
-        if (store.IsActive == false)
-            throw new Exception("Store is deActivated");
-
         var discount = discountRepository.GetBy(request.DiscountCode);
-        if (discount is not null && discount.IsActive == false)
-            throw new Exception("Invalid discount code");
-
-        if (request.Products == null || request.Products.Any() == false)
-            throw new Exception("AtLeast one product is required.");
-
+        
+        var order = new Order(request.Id, store, customer, discount);
         var products = request.Products.Select(p => productRepository.GetBy(p.Id)).ToList();
-
-        if (products.Any(p => p.Price <= 0))
+        if (!products.Any())
             throw new Exception("AtLeast one product is required.");
-
-        var order = new Order
-        {
-            Id = request.Id,
-            Store = store,
-            Discount = discount,
-            Customer = customer,
-            Products = products
-        };
+        products.ForEach(p=>order.AddProduct(p));
 
         orderRepository.Add(order);
 
@@ -56,30 +38,18 @@ public class OrderService(
         var order = orderRepository.GetBy(request.Id);
 
         var customer = customerRepository.GetBy(request.CustomerId);
-        if (customer.IsActive == false)
-            throw new Exception("Customer is deActivated");
-
         var store = storeRepository.GetBy(request.StoreId);
-        if (store.IsActive == false)
-            throw new Exception("Store is deActivated");
-
         var discount = discountRepository.GetBy(request.DiscountCode);
-        if (discount is not null && discount.IsActive == false)
-            throw new Exception("Invalid discount code");
-
-        if (request.Products == null || request.Products.Any() == false)
-            throw new Exception("AtLeast one product is required.");
-
+        
         var products = request.Products.Select(p => productRepository.GetBy(p.Id)).ToList();
-
-        if (products.Any(p => p.Price <= 0))
+        if (!products.Any())
             throw new Exception("AtLeast one product is required.");
+        products.ForEach(p=>order.AddProduct(p));
 
-        order.Store = store;
-        order.Customer = customer;
-        order.Discount = discount;
-        order.Products = products;
 
+        order.SetStore(store);
+        order.SetCustomer(customer);
+        order.SetDiscount(discount);
 
         orderRepository.Add(order);
 
