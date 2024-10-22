@@ -21,12 +21,9 @@ public class OrderService(
         var customer = customerRepository.GetBy(request.CustomerId);
         var store = storeRepository.GetBy(request.StoreId);
         var discount = discountRepository.GetBy(request.DiscountCode);
-        
-        var order = new Order(request.Id, store, customer, discount);
         var products = request.Products.Select(p => productRepository.GetBy(p.Id)).ToList();
-        if (!products.Any())
-            throw new Exception("AtLeast one product is required.");
-        products.ForEach(p=>order.AddProduct(p));
+        
+        var order = new Order(request.Id, store, customer, discount,products);
 
         orderRepository.Add(order);
 
@@ -40,16 +37,12 @@ public class OrderService(
         var customer = customerRepository.GetBy(request.CustomerId);
         var store = storeRepository.GetBy(request.StoreId);
         var discount = discountRepository.GetBy(request.DiscountCode);
-        
         var products = request.Products.Select(p => productRepository.GetBy(p.Id)).ToList();
-        if (!products.Any())
-            throw new Exception("AtLeast one product is required.");
-        products.ForEach(p=>order.AddProduct(p));
-
-
+        
         order.SetStore(store);
         order.SetCustomer(customer);
         order.SetDiscount(discount);
+        order.SetProducts(products);
 
         orderRepository.Add(order);
 

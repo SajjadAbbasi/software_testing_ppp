@@ -7,7 +7,7 @@ public class Order
     public string Id { get; private set; }
     private List<Product> _orderProducts;
 
-    public Order(string id, Store store, Customer customer, Discount? discount)
+    public Order(string id, Store store, Customer customer, Discount? discount,List<Product> products)
     {
         
         Id = id;
@@ -15,6 +15,7 @@ public class Order
         SetStore(store);
         SetCustomer(customer);
         SetDiscount(discount);
+        SetProducts(products);
     }
     
     private Store Store { get; set; }
@@ -44,9 +45,11 @@ public class Order
     }
 
 
-    public void AddProduct(Product product)
+    public void SetProducts(List<Product> products)
     {
-        _orderProducts.Add(product);
+        if (!products.Any())
+            throw new Exception("AtLeast one product is required.");
+        _orderProducts = products;
     }
     
 }
