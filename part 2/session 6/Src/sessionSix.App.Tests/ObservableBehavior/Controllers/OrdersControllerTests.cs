@@ -4,6 +4,10 @@ namespace sessionSix.App.Tests.ObservableBehavior.Controllers;
 
 public class OrdersControllerTests
 {
+    public OrdersControllerTests()
+    {
+        
+    }
     [Fact]
     public void Order_is_created_successfully()
     {

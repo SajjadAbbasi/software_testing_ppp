@@ -23,7 +23,11 @@ public class OrderService(
         var discount = discountRepository.GetBy(request.DiscountCode);
         var products = request.Products.Select(p => productRepository.GetBy(p.Id)).ToList();
         
-        var order = new Order(request.Id, store, customer, discount,products);
+        var order = new Order(request.Id);
+        order.SetStore(store);
+        order.SetCustomer(customer);
+        order.SetDiscount(discount);
+        order.SetProducts(products);
 
         orderRepository.Add(order);
 
