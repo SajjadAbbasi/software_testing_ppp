@@ -1,6 +1,6 @@
 using sessionSix.App.ObservableBehavior.Domain;
 
-namespace sessionSix.App.Tests.ObservableBehavior.FakeObjects;
+namespace sessionSix.App.Tests.ObservableBehavior.Services;
 
 public class OrderRepositoryFakeObject : IOrderRepository
 {

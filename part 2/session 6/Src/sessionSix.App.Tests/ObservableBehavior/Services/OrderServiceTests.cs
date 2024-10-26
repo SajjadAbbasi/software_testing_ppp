@@ -3,7 +3,6 @@ using NSubstitute;
 using sessionSix.App.ObservableBehavior.Domain;
 using sessionSix.App.ObservableBehavior.Services;
 using sessionSix.App.Tests.ObservableBehavior.Domain;
-using sessionSix.App.Tests.ObservableBehavior.FakeObjects;
 using Xunit;
 
 namespace sessionSix.App.Tests.ObservableBehavior.Services;
